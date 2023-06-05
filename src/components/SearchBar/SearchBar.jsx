@@ -1,44 +1,42 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { SearchBarStyled } from './SearchBar.styled';
 import { toast } from 'react-toastify';
 
-export default class SearchBar extends Component {
-  state = {
-    input: '',
-  };
+const SearchBar = props => {
+  const [input, setInput] = useState('');
 
-  handleChange = e => {
+  const handleChange = e => {
     const { value } = e.currentTarget;
-    this.setState({ input: value.toLowerCase() });
+    setInput(value);
   };
-  submitHandler = e => {
+  const submitHandler = e => {
     e.preventDefault();
-    if (this.state.input.trim() === '') {
-      return toast.warn('Please enter non-empty search query!');
+    if (input.trim() === '') {
+      return toast.warn('Please enter a non-empty search query!');
     }
-    this.props.onSubmit(this.state);
-    this.setState(prevState => ({ ...prevState, input: '' }));
+    props.onSubmit(input.trim());
+    setInput('');
   };
 
-  render() {
-    return (
-      <SearchBarStyled>
-        <form className="form" onSubmit={this.submitHandler}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
-          </button>
+  return (
+    <SearchBarStyled>
+      <form className="form" onSubmit={submitHandler}>
+        <button type="submit" className="button">
+          <span className="button-label">Search</span>
+        </button>
 
-          <input
-            className="input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-            value={this.state.input}
-          />
-        </form>
-      </SearchBarStyled>
-    );
-  }
-}
+        <input
+          className="input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+          value={input}
+        />
+      </form>
+    </SearchBarStyled>
+  );
+};
+
+export default SearchBar;
